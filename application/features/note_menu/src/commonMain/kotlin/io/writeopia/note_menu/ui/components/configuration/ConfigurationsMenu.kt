@@ -1,4 +1,4 @@
-package io.writeopia.note_menu.ui.screen.configuration
+package io.writeopia.note_menu.ui.components.configuration
 
 //import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.background

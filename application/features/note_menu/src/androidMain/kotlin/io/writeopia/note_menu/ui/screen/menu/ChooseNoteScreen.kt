@@ -28,8 +28,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.valentinilk.shimmer.shimmer
-import io.writeopia.note_menu.ui.screen.configuration.ConfigurationsMenu
-import io.writeopia.note_menu.ui.screen.configuration.NotesSelectionMenu
+import io.writeopia.note_menu.ui.components.configuration.ConfigurationsMenu
+import io.writeopia.note_menu.ui.components.configuration.NotesSelectionMenu
+import io.writeopia.note_menu.ui.components.menu.ADD_NOTE_TEST_TAG
+import io.writeopia.note_menu.ui.components.menu.Notes
 import io.writeopia.note_menu.viewmodel.ChooseNoteViewModel
 import io.writeopia.note_menu.viewmodel.UserState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,8 +40,8 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 internal fun ChooseNoteScreen(
     chooseNoteViewModel: ChooseNoteViewModel,
-    navigateToNote: (String, String) -> Unit,
-    navigateToAccount: () -> Unit,
+    loadNote: (String, String) -> Unit,
+    goToAccount: () -> Unit,
     newNote: () -> Unit,
 ) {
     LaunchedEffect(key1 = "refresh", block = {
@@ -69,7 +71,7 @@ internal fun ChooseNoteScreen(
                 topBar = {
                     TopBar(
                         titleState = chooseNoteViewModel.userName,
-                        accountClick = navigateToAccount,
+                        accountClick = goToAccount,
                         menuClick = chooseNoteViewModel::editMenu
                     )
                 },
@@ -79,7 +81,7 @@ internal fun ChooseNoteScreen(
             ) { paddingValues ->
                 Content(
                     chooseNoteViewModel = chooseNoteViewModel,
-                    navigateToNote = navigateToNote,
+                    navigateToNote = loadNote,
                     selectionListener = chooseNoteViewModel::onDocumentSelected,
                     paddingValues = paddingValues,
                 )
@@ -225,8 +227,9 @@ private fun Content(
             .fillMaxSize()
     ) {
         Notes(
-            chooseNoteViewModel = chooseNoteViewModel,
-            navigateToNote = navigateToNote,
+            documentsState = chooseNoteViewModel.documentsState,
+            notesArrangement = chooseNoteViewModel.notesArrangement,
+            loadNote = navigateToNote,
             selectionListener = selectionListener,
         )
     }

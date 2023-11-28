@@ -1,4 +1,4 @@
-package io.writeopia.note_menu.ui.screen.menu
+package io.writeopia.note_menu.ui.components.menu
 
 //import io.writeopia.appresourcers.R
 import androidx.compose.foundation.clickable
@@ -35,19 +35,19 @@ import io.writeopia.sdk.model.draw.DrawInfo
 import io.writeopia.sdk.models.story.StoryTypes
 import io.writeopia.sdk.uicomponents.SwipeBox
 import io.writeopia.utils_module.ResultData
+import kotlinx.coroutines.flow.StateFlow
 
 const val DOCUMENT_ITEM_TEST_TAG = "DocumentItem_"
 const val ADD_NOTE_TEST_TAG = "addNote"
 
 @Composable
 internal fun Notes(
-    chooseNoteViewModel: ChooseNoteViewModel,
-    navigateToNote: (String, String) -> Unit,
+    documentsState: StateFlow<ResultData<List<DocumentUi>>>,
+    notesArrangement: StateFlow<NotesArrangement?>,
+    loadNote: (String, String) -> Unit,
     selectionListener: (String, Boolean) -> Unit,
 ) {
-    when (val documents =
-        chooseNoteViewModel.documentsState.collectAsState().value
-    ) {
+    when (val documents = documentsState.value) {
         is ResultData.Complete -> {
             Column(modifier = Modifier.fillMaxWidth()) {
                 val data = documents.data
@@ -55,14 +55,14 @@ internal fun Notes(
                 if (data.isEmpty()) {
                     NoNotesScreen()
                 } else {
-                    val arrangement by chooseNoteViewModel.notesArrangement.collectAsState()
+                    val arrangement by notesArrangement.collectAsState()
 
                     when (arrangement) {
                         NotesArrangement.GRID -> {
                             LazyGridNotes(
                                 documents.data,
                                 selectionListener = selectionListener,
-                                onDocumentClick = navigateToNote
+                                onDocumentClick = loadNote
                             )
                         }
 
@@ -70,7 +70,7 @@ internal fun Notes(
                             LazyColumnNotes(
                                 documents.data,
                                 selectionListener = selectionListener,
-                                onDocumentClick = navigateToNote
+                                onDocumentClick = loadNote
                             )
                         }
 
@@ -78,7 +78,7 @@ internal fun Notes(
                             LazyGridNotes(
                                 documents.data,
                                 selectionListener = selectionListener,
-                                onDocumentClick = navigateToNote
+                                onDocumentClick = loadNote
                             )
                         }
                     }
