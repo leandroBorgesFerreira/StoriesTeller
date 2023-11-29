@@ -1,6 +1,7 @@
 package io.writeopia.note_menu.ui.components.menu
 
 //import io.writeopia.appresourcers.R
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.writeopia.note_menu.data.NotesArrangement
+import io.writeopia.note_menu.ui.NotesDummies
 import io.writeopia.note_menu.ui.dto.DocumentUi
-import io.writeopia.note_menu.viewmodel.ChooseNoteViewModel
 import io.writeopia.sdk.drawer.StoryStepDrawer
 import io.writeopia.sdk.drawer.preview.CheckItemPreviewDrawer
 import io.writeopia.sdk.drawer.preview.HeaderPreviewDrawer
@@ -35,6 +36,7 @@ import io.writeopia.sdk.model.draw.DrawInfo
 import io.writeopia.sdk.models.story.StoryTypes
 import io.writeopia.sdk.uicomponents.SwipeBox
 import io.writeopia.utils_module.ResultData
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 const val DOCUMENT_ITEM_TEST_TAG = "DocumentItem_"
@@ -150,13 +152,14 @@ private fun DocumentItem(
     documentUi: DocumentUi,
     documentClick: (String, String) -> Unit,
     selectionListener: (String, Boolean) -> Unit,
-    drawers: Map<Int, StoryStepDrawer>
+    drawers: Map<Int, StoryStepDrawer>,
+    modifier: Modifier = Modifier
 ) {
     val titleFallback = "untitled"
 //        stringResource(R.string.untitled)
 
     SwipeBox(
-        modifier = Modifier
+        modifier = modifier
             .padding(bottom = 6.dp)
             .fillMaxWidth()
             .clickable {
@@ -188,7 +191,7 @@ private fun DocumentItem(
     }
 }
 
-//@Preview
+@Preview
 @Composable
 private fun NoNotesScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -245,5 +248,37 @@ private fun previewDrawers(): Map<Int, StoryStepDrawer> {
         StoryTypes.H2.type.number to TextPreviewDrawer(style = h2TextStyle),
         StoryTypes.H3.type.number to TextPreviewDrawer(style = h3TextStyle),
         StoryTypes.H4.type.number to TextPreviewDrawer(style = h4TextStyle),
+    )
+}
+
+
+@Preview
+@Composable
+fun NotesPreview() {
+    Notes(
+        documentsState = MutableStateFlow(
+            ResultData.Complete(
+                buildList {
+                    repeat(15) {
+                        add(NotesDummies.dummyDocumentUi())
+                    }
+                }
+            )
+        ),
+        notesArrangement = MutableStateFlow(NotesArrangement.GRID),
+        selectionListener = { _, _ -> },
+        loadNote = { _, _ -> },
+    )
+}
+
+@Preview
+@Composable
+fun DocumentItemPreview() {
+    DocumentItem(
+        modifier = Modifier.padding(20.dp),
+        documentUi = NotesDummies.dummyDocumentUi(),
+        selectionListener = { _, _ -> },
+        documentClick = { _, _ -> },
+        drawers = previewDrawers()
     )
 }
