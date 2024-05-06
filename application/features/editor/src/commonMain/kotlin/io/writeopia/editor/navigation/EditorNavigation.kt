@@ -2,17 +2,16 @@ package io.writeopia.editor.navigation
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import io.writeopia.editor.di.EditorInjector
-import io.writeopia.editor.ui.NoteEditorScreen
+import io.writeopia.editor.di.TextEditorInjector
+import io.writeopia.editor.ui.screen.TextEditorScreen
 import io.writeopia.utils_module.Destinations
 
 fun NavGraphBuilder.editorNavigation(
-    editorInjector: EditorInjector,
+    editorInjector: TextEditorInjector,
     navigateToNoteMenu: () -> Unit
 ) {
     composable(
@@ -35,7 +34,7 @@ fun NavGraphBuilder.editorNavigation(
         if (noteId != null && noteTitle != null) {
             val noteDetailsViewModel = editorInjector.provideNoteDetailsViewModel()
 
-            NoteEditorScreen(
+            TextEditorScreen(
                 noteId.takeIf { it != "null" },
                 noteTitle.takeIf { it != "null" },
                 noteDetailsViewModel,
@@ -47,9 +46,9 @@ fun NavGraphBuilder.editorNavigation(
     }
 
     composable(route = Destinations.EDITOR.id) {
-        val notesDetailsViewModel = viewModel(initializer = { editorInjector.provideNoteDetailsViewModel() })
+        val notesDetailsViewModel = editorInjector.provideNoteDetailsViewModel()
 
-        NoteEditorScreen(
+        TextEditorScreen(
             documentId = null,
             title = null,
             noteEditorViewModel = notesDetailsViewModel,
