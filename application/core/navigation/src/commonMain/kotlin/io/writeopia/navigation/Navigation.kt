@@ -1,6 +1,7 @@
 package io.writeopia.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.key.KeyEvent
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -18,7 +19,8 @@ import io.writeopia.utils_module.Destinations
 fun Navigation(
     startDestination: String = Destinations.AUTH_MENU_INNER_NAVIGATION.id,
     notesMenuInjection: NotesMenuInjection,
-    editorInjector: TextEditorInjector
+    editorInjector: TextEditorInjector,
+    isUndoKeyEvent: (KeyEvent) -> Boolean
 ) {
     val navController: NavHostController = rememberNavController()
 
@@ -32,7 +34,8 @@ fun Navigation(
 
         editorNavigation(
             editorInjector = editorInjector,
-            navigateToNoteMenu = navController::navigateToNoteMenu
+            navigateToNoteMenu = navController::navigateToNoteMenu,
+            isUndoKeyEvent = isUndoKeyEvent,
         )
     }
 }

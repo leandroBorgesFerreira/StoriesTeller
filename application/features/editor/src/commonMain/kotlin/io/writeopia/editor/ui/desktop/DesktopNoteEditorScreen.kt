@@ -1,6 +1,9 @@
 package io.writeopia.editor.ui.desktop
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
@@ -21,21 +24,22 @@ fun DesktopNoteEditorScreen(
     EditorScaffold(
         clickAtBottom = noteEditorViewModel.writeopiaManager::clickAtTheEnd,
         onBackClick = navigateBack,
-        modifier = modifier,
+        modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
         content = {
             AppTextEditor(
                 noteEditorViewModel.writeopiaManager,
                 noteEditorViewModel,
                 drawersFactory = drawersFactory,
                 loadNoteId = documentId,
-                modifier = Modifier.onPreviewKeyEvent { keyEvent ->
-                    if (isUndoKeyEvent(keyEvent)) {
-                        noteEditorViewModel.undo()
-                        true
-                    } else {
-                        false
-                    }
-                }.padding(horizontal = 30.dp)
+                modifier = Modifier
+                    .onPreviewKeyEvent { keyEvent ->
+                        if (isUndoKeyEvent(keyEvent)) {
+                            noteEditorViewModel.undo()
+                            true
+                        } else {
+                            false
+                        }
+                    }.padding(horizontal = 30.dp)
             )
         }
     )

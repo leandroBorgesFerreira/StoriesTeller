@@ -3,7 +3,10 @@ package io.writeopia.note_menu.navigation
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -38,12 +41,12 @@ fun NavGraphBuilder.notesMenuNavigation(
         val chooseNoteViewModel =
             notesMenuInjection.provideChooseNoteViewModel(coroutineScope = rememberCoroutineScope())
 
-
         NotesMenuScreen(
             chooseNoteViewModel = chooseNoteViewModel,
             onNewNoteClick = navigateToNewNote,
             onNoteClick = navigateToNote,
             onAccountClick = navigateToAccount,
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )
     }
 }

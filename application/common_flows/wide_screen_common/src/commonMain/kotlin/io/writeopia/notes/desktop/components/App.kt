@@ -36,10 +36,9 @@ import kotlinx.coroutines.flow.StateFlow
 fun App(
     notesConfigurationInjector: NotesConfigurationInjector,
     repositoryInjection: RepositoryInjector,
-    drawersFactory: DrawersFactory,
     disableWebsocket: Boolean = false,
-    isUndoKeyEvent: (KeyEvent) -> Boolean,
     selectionState: StateFlow<Boolean>,
+    isUndoKeyEvent: (KeyEvent) -> Boolean
 ) {
     val authCoreInjection = KmpAuthCoreInjection()
     val connectionInjection =
@@ -66,64 +65,8 @@ fun App(
         Navigation(
             startDestination = Destinations.CHOOSE_NOTE.id,
             notesMenuInjection = notesMenuInjection,
-            editorInjector = editorInjector
+            editorInjector = editorInjector,
+            isUndoKeyEvent = isUndoKeyEvent,
         )
-//        val currentPage by navigationViewModel.navigationPage.collectAsState()
-//        val backgroundColor = MaterialTheme.colorScheme.background
-//
-//        Crossfade(currentPage, animationSpec = tween(durationMillis = 300)) { state ->
-//            when (state) {
-//                NavigationPage.NoteMenu -> {
-//                    val coroutineScope = rememberCoroutineScope()
-//                    val chooseNoteViewModel =
-//                        notesMenuInjection.provideChooseNoteViewModel(coroutineScope)
-//
-//                    DesktopNotesMenu(
-//                        chooseNoteViewModel = chooseNoteViewModel,
-//                        onNewNoteClick = {
-//                            navigationViewModel.navigateTo(NavigationPage.Editor())
-//                        },
-//                        onNoteClick = { id, title ->
-//                            val isHandled = chooseNoteViewModel.handleNoteTap(id)
-//
-//                            if (!isHandled) {
-//                                navigationViewModel.navigateTo(NavigationPage.Editor(id, title))
-//                            }
-//                        },
-//                        modifier = Modifier.background(backgroundColor)
-//                    )
-//                }
-//
-//                is NavigationPage.Editor -> {
-//                    val noteEditorViewModel = remember {
-//                        editorInjector.provideNoteEditorViewModel()
-//                    }
-//
-//                    EditorScaffold(
-//                        clickAtBottom = noteEditorViewModel.writeopiaManager::clickAtTheEnd,
-//                        onBackClick = {
-//                            navigationViewModel.navigateTo(NavigationPage.NoteMenu)
-//                        },
-//                        modifier = Modifier.background(backgroundColor),
-//                        content = {
-//                            AppTextEditor(
-//                                noteEditorViewModel.writeopiaManager,
-//                                noteEditorViewModel,
-//                                drawersFactory = drawersFactory,
-//                                loadNoteId = state.noteId,
-//                                modifier = Modifier.onPreviewKeyEvent { keyEvent ->
-//                                    if (isUndoKeyEvent(keyEvent)) {
-//                                        noteEditorViewModel.undo()
-//                                        true
-//                                    } else {
-//                                        false
-//                                    }
-//                                }.padding(horizontal = 30.dp)
-//                            )
-//                        }
-//                    )
-//                }
-//            }
-//        }
     }
 }

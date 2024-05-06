@@ -17,6 +17,7 @@ actual fun TextEditorScreen(
     title: String?,
     noteEditorViewModel: NoteEditorViewModel,
     navigateBack: () -> Unit,
+    isUndoKeyEvent: (KeyEvent) -> Boolean,
     modifier: Modifier,
 ) {
     DesktopNoteEditorScreen(

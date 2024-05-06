@@ -2,6 +2,11 @@ package io.writeopia.editor.navigation
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.KeyEvent
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -12,7 +17,8 @@ import io.writeopia.utils_module.Destinations
 
 fun NavGraphBuilder.editorNavigation(
     editorInjector: TextEditorInjector,
-    navigateToNoteMenu: () -> Unit
+    navigateToNoteMenu: () -> Unit,
+    isUndoKeyEvent: (KeyEvent) -> Boolean
 ) {
     composable(
         route = "${Destinations.EDITOR.id}/{noteId}/{noteTitle}",
@@ -38,6 +44,7 @@ fun NavGraphBuilder.editorNavigation(
                 noteId.takeIf { it != "null" },
                 noteTitle.takeIf { it != "null" },
                 noteDetailsViewModel,
+                isUndoKeyEvent = isUndoKeyEvent,
                 navigateBack = navigateToNoteMenu
             )
         } else {
@@ -52,7 +59,9 @@ fun NavGraphBuilder.editorNavigation(
             documentId = null,
             title = null,
             noteEditorViewModel = notesDetailsViewModel,
-            navigateBack = navigateToNoteMenu
+            isUndoKeyEvent = isUndoKeyEvent,
+            navigateBack = navigateToNoteMenu,
+            modifier = Modifier
         )
     }
 }
