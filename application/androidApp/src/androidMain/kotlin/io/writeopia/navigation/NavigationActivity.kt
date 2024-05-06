@@ -84,6 +84,7 @@ fun NavigationGraph(
 
     WrieopiaTheme {
         NavHost(navController = navController, startDestination = startDestination) {
+            // Todo: Migrar
             authNavigation(navController, authInjection, navController::navigateToMainMenu)
 
             notesMenuNavigation(
@@ -98,6 +99,7 @@ fun NavigationGraph(
                 navigateToNoteMenu = navController::navigateToNoteMenu
             )
 
+            // Todo: Migrar
             accountMenuNavigation(
                 accountMenuInjector = accountMenuInjector,
                 navController::navigateToAuthMenu

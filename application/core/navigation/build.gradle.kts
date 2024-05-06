@@ -17,6 +17,7 @@ kotlin {
             dependencies {
                 implementation(libs.compose.navigation)
                 implementation(project(":application:features:note_menu"))
+                implementation(project(":application:features:editor"))
                 implementation(project(":application:core:utils"))
             }
         }
