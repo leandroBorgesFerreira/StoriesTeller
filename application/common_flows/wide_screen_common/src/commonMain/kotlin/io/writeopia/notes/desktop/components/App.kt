@@ -50,7 +50,7 @@ fun App(
             disableWebsocket = disableWebsocket
         )
 
-    val editorInjector = EditorKmpInjectoder(
+    val editorInjector = EditorKmpInjector(
         authCoreInjection = authCoreInjection,
         repositoryInjection = repositoryInjection,
         connectionInjection = connectionInjection
