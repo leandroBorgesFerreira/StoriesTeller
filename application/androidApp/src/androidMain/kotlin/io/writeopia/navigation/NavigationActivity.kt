@@ -83,26 +83,15 @@ fun NavigationGraph(
     )
 
     WrieopiaTheme {
-        NavHost(navController = navController, startDestination = startDestination) {
+        Navigation(
+            notesMenuInjection = notesMenuInjection,
+            navController = navController,
+            editorInjector = editorInjector,
+            accountMenuInjector = accountMenuInjector,
+            startDestination = startDestination,
+            isUndoKeyEvent = { false }
+        ) {
             authNavigation(navController, authInjection, navController::navigateToMainMenu)
-
-            notesMenuNavigation(
-                notesMenuInjection = notesMenuInjection,
-                navigateToNote = navController::navigateToNote,
-                navigateToAccount = navController::navigateToAccount,
-                navigateToNewNote = navController::navigateToNewNote
-            )
-
-            editorNavigation(
-                editorInjector = editorInjector,
-                navigateToNoteMenu = navController::navigateToNoteMenu,
-                isUndoKeyEvent = { false }
-            )
-
-            accountMenuNavigation(
-                accountMenuInjector = accountMenuInjector,
-                navController::navigateToAuthMenu
-            )
         }
     }
 }

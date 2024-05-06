@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
+import io.writeopia.account.di.AccountMenuInjector
+import io.writeopia.account.di.AccountMenuKmpInjector
 import io.writeopia.auth.core.di.KmpAuthCoreInjection
 import io.writeopia.auth.core.token.MockTokenHandler
 import io.writeopia.editor.di.EditorKmpInjector
@@ -48,11 +50,13 @@ fun App(
             disableWebsocket = disableWebsocket
         )
 
-    val editorInjector = EditorKmpInjector(
+    val editorInjector = EditorKmpInjectoder(
         authCoreInjection = authCoreInjection,
         repositoryInjection = repositoryInjection,
         connectionInjection = connectionInjection
     )
+
+    val accountInjector = AccountMenuKmpInjector(authCoreInjection)
 
     val notesMenuInjection = NotesMenuKmpInjection(
         notesConfigurationInjector = notesConfigurationInjector,
@@ -65,8 +69,11 @@ fun App(
         Navigation(
             startDestination = Destinations.CHOOSE_NOTE.id,
             notesMenuInjection = notesMenuInjection,
+            accountMenuInjector = accountInjector,
             editorInjector = editorInjector,
             isUndoKeyEvent = isUndoKeyEvent,
-        )
+        ) {
+
+        }
     }
 }
