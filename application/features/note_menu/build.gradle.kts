@@ -44,6 +44,7 @@ kotlin {
                 implementation(project(":application:core:persistence_bridge"))
                 implementation(project(":application:core:theme"))
                 implementation(project(":application:core:folders"))
+                implementation(project(":application:core:connection"))
 
                 implementation(project(":application:features:account"))
 
