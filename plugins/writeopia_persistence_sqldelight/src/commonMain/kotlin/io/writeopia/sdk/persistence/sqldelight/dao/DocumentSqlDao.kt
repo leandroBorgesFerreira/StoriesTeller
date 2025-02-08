@@ -159,7 +159,7 @@ class DocumentSqlDao(
                                 ?.mapNotNull(TagInfo.Companion::fromString)
                                 ?.toSet()
                                 ?: emptySet(),
-                            spans =  innerContent.spans
+                            spans = innerContent.spans
                                 ?.split(",")
                                 ?.filter { it.isNotEmpty() }
                                 ?.map(SpanInfo::fromString)
@@ -218,7 +218,7 @@ class DocumentSqlDao(
                                 ?.mapNotNull(TagInfo.Companion::fromString)
                                 ?.toSet()
                                 ?: emptySet(),
-                            spans =  innerContent.spans
+                            spans = innerContent.spans
                                 ?.split(",")
                                 ?.filter { it.isNotEmpty() }
                                 ?.map(SpanInfo::fromString)
@@ -283,7 +283,7 @@ class DocumentSqlDao(
                                 ?.mapNotNull(TagInfo.Companion::fromString)
                                 ?.toSet()
                                 ?: emptySet(),
-                            spans =  innerContent.spans
+                            spans = innerContent.spans
                                 ?.split(",")
                                 ?.filter { it.isNotEmpty() }
                                 ?.map(SpanInfo::fromString)
@@ -348,7 +348,7 @@ class DocumentSqlDao(
                                 ?.mapNotNull(TagInfo.Companion::fromString)
                                 ?.toSet()
                                 ?: emptySet(),
-                            spans =  innerContent.spans
+                            spans = innerContent.spans
                                 ?.split(",")
                                 ?.filter { it.isNotEmpty() }
                                 ?.map(SpanInfo::fromString)
@@ -416,7 +416,7 @@ class DocumentSqlDao(
                                 ?.mapNotNull(TagInfo.Companion::fromString)
                                 ?.toSet()
                                 ?: emptySet(),
-                            spans =  innerContent.spans
+                            spans = innerContent.spans
                                 ?.split(",")
                                 ?.filter { it.isNotEmpty() }
                                 ?.map(SpanInfo::fromString)
@@ -455,12 +455,12 @@ class DocumentSqlDao(
             ?.mapNotNull { (documentId, content) ->
                 content.firstOrNull()?.let { document ->
                     val innerContent = content.filter { innerContent ->
-                        innerContent.id_.isNotEmpty()
+                        innerContent.id_?.isNotEmpty() == true
                     }.associate { innerContent ->
                         val storyStep = StoryStep(
-                            id = innerContent.id_,
-                            localId = innerContent.local_id,
-                            type = StoryTypes.fromNumber(innerContent.type.toInt()).type,
+                            id = innerContent.id_!!,
+                            localId = innerContent.local_id!!,
+                            type = StoryTypes.fromNumber(innerContent.type!!.toInt()).type,
                             parentId = innerContent.parent_id,
                             url = innerContent.url,
                             path = innerContent.path,
@@ -471,18 +471,20 @@ class DocumentSqlDao(
                                 backgroundColor = innerContent.background_color?.toInt(),
                             ),
                             tags = innerContent.tags
-                                .split(",")
-                                .filter { it.isNotEmpty() }
-                                .mapNotNull(TagInfo.Companion::fromString)
-                                .toSet(),
-                            spans =  innerContent.spans
-                                .split(",")
-                                .filter { it.isNotEmpty() }
-                                .map(SpanInfo::fromString)
-                                .toSet()
+                                ?.split(",")
+                                ?.filter { it.isNotEmpty() }
+                                ?.mapNotNull(TagInfo.Companion::fromString)
+                                ?.toSet()
+                                ?: emptySet(),
+                            spans = innerContent.spans
+                                ?.split(",")
+                                ?.filter { it.isNotEmpty() }
+                                ?.map(SpanInfo::fromString)
+                                ?.toSet()
+                                ?: emptySet(),
                         )
 
-                        innerContent.position.toInt() to storyStep
+                        innerContent.position!!.toInt() to storyStep
                     }
 
                     Document(
@@ -505,6 +507,11 @@ class DocumentSqlDao(
                 }
             } ?: emptyList()
     }
+
+    suspend fun loadDocumentIdsByParentId(parentId: String): List<String> =
+        documentQueries?.selectIdsByParentId(parentId)
+            ?.awaitAsList()
+            ?: emptyList()
 
     suspend fun deleteDocumentsByUserId(userId: String) {
         documentQueries?.deleteByUserId(userId)
