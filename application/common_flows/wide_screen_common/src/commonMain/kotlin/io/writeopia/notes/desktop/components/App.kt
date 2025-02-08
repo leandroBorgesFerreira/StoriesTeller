@@ -53,7 +53,7 @@ import io.writeopia.notemenu.navigation.NAVIGATION_TYPE
 import io.writeopia.notemenu.navigation.navigateToNotes
 import io.writeopia.notemenu.ui.screen.menu.EditFileScreen
 import io.writeopia.notemenu.ui.screen.menu.RoundedVerticalDivider
-import io.writeopia.sdk.network.injector.ConnectionInjector
+import io.writeopia.sdk.network.injector.WriteopiaConnectionInjector
 import io.writeopia.sdk.persistence.core.di.RepositoryInjector
 import io.writeopia.sql.WriteopiaDb
 import io.writeopia.theme.WrieopiaTheme
@@ -80,14 +80,15 @@ fun DesktopApp(
     coroutineScope: CoroutineScope,
     isUndoKeyEvent: (KeyEvent) -> Boolean,
     selectColorTheme: (ColorThemeOption) -> Unit,
+    baseUrl: String = "https://writeopia.io/api",
     startDestination: String = startDestination(),
 ) {
     val authCoreInjection = remember { KmpAuthCoreInjection() }
     val connectionInjection =
         remember {
-            ConnectionInjector(
+            WriteopiaConnectionInjector(
                 bearerTokenHandler = MockTokenHandler,
-                baseUrl = "https://writeopia.io/api",
+                baseUrl = baseUrl,
                 disableWebsocket = disableWebsocket
             )
         }

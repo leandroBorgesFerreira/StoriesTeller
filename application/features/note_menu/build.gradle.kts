@@ -36,6 +36,7 @@ kotlin {
                 implementation(project(":plugins:writeopia_persistence_core"))
                 implementation(project(":plugins:writeopia_export"))
                 implementation(project(":plugins:writeopia_import_document"))
+                implementation(project(":plugins:writeopia_network"))
 
                 implementation(project(":application:core:utils"))
                 implementation(project(":application:core:models"))

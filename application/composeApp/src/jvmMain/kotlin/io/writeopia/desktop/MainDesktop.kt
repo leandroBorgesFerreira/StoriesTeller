@@ -38,6 +38,7 @@ import androidx.compose.ui.input.key.KeyEvent as AndroidKeyEvent
 
 private const val APP_DIRECTORY = ".writeopia"
 private const val DB_VERSION = 13
+private const val BASE_URL = "http://127.0.0.1"
 
 fun main() = application {
     DesktopApp()
@@ -123,6 +124,7 @@ private fun ApplicationScope.DesktopApp(onCloseRequest: () -> Unit = ::exitAppli
                     isUndoKeyEvent = ::isUndoKeyboardEvent,
                     colorThemeOption = colorTheme,
                     selectColorTheme = uiConfigurationViewModel::changeColorTheme,
+                    baseUrl = BASE_URL,
                     writeopiaDb = database
                 )
             }

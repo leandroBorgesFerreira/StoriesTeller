@@ -10,6 +10,7 @@ import io.writeopia.notemenu.extensions.sortedWithOrderBy
 import io.writeopia.sdk.models.document.Document
 import io.writeopia.sdk.models.document.MenuItem
 import io.writeopia.sdk.models.id.GenerateId
+import io.writeopia.sdk.network.notes.NotesApi
 import io.writeopia.sdk.persistence.core.repository.DocumentRepository
 import io.writeopia.sdk.persistence.core.sorting.OrderBy
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,8 @@ import kotlinx.datetime.Instant
 class NotesUseCase private constructor(
     private val documentRepository: DocumentRepository,
     private val notesConfig: ConfigurationRepository,
-    private val folderRepository: FolderRepository
+    private val folderRepository: FolderRepository,
+    private val notesApi: NotesApi
 ) {
 
     suspend fun createFolder(name: String, userId: String) {
@@ -122,9 +124,21 @@ class NotesUseCase private constructor(
         duplicateFolders(ids)
     }
 
-    suspend fun saveDocument(document: Document) {
+    suspend fun saveDocumentDb(document: Document) {
         documentRepository.saveDocument(document)
         documentRepository.refreshDocuments()
+    }
+
+    suspend fun saveDocumentCloud(document: Document): Boolean {
+        val isSuccess = notesApi.createDocument(document)
+
+        if (isSuccess) {
+            documentRepository.saveDocument(document.copy(cloudSynced = true))
+        }
+
+        documentRepository.refreshDocuments()
+
+        return isSuccess
     }
 
     suspend fun deleteNotes(ids: Set<String>) {
@@ -236,9 +250,15 @@ class NotesUseCase private constructor(
         fun singleton(
             documentRepository: DocumentRepository,
             notesConfig: ConfigurationRepository,
-            folderRepository: FolderRepository
+            folderRepository: FolderRepository,
+            notesApi: NotesApi
         ): NotesUseCase =
-            instance ?: NotesUseCase(documentRepository, notesConfig, folderRepository).also {
+            instance ?: NotesUseCase(
+                documentRepository,
+                notesConfig,
+                folderRepository,
+                notesApi
+            ).also {
                 instance = it
             }
     }
